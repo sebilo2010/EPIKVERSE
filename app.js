@@ -4,17 +4,6 @@ const port = 10000
 const fs = require("fs") 
 const process = require("process")
 
-process.on("SIGINT", async function() {
-    await client.close()
-    console.log("\nClosing MongoDB connection!")
-    process.exit();
-})
-           
-
-async function GetUserData(username) {
-    let userData = await client.db("WarriorBloxDB").collection("users").findOne({UserName: username})
-    return userData
-}
 
 http.createServer(async function(req, res) {
     const urlpath = url.parse(req.url, true) 
@@ -70,5 +59,3 @@ function sendf(res, file) {
     res.write(fs.readFileSync(__dirname + "/" + file));
     res.end();
 }
-
-run().catch(console.dir);
