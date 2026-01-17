@@ -1,0 +1,68 @@
+body {
+    margin: 0px;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 330;
+    font-style: normal;
+}
+
+.info {
+    margin: 10px;
+}
+
+.topbar {
+    background-image: linear-gradient(rgb(201, 114, 0),rgb(114, 46, 0));
+    padding: 10px;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.topbar a {
+    color: rgb(255, 255, 255);
+    padding-left: 10px;
+    text-decoration: none;
+ }
+
+.games-page {
+    padding-top: 60px;
+    padding: 10px;
+}
+
+.games-page h1 {
+    padding-bottom: 15px;
+}
+
+.game {
+    display: flex;
+    flex-direction: column;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.title {
+    font-family: "Source Sans 3";
+    padding-top: 10px;
+    padding-bottom: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.gametitle {
+    font-family: "Source Sans 3";
+    padding-top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.play-button {
+    background-image: linear-gradient(green, darkgreen);
+    padding: 15px;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-top: 3px;
+    border: 2px black solid;
+    width: 20%;
+}
