@@ -6,69 +6,42 @@ const path = require("path");
 const port = 10000;
 
 http.createServer(function(req, res) {
-    const urlpath = url.parse(req.url, true);
-    const pathname = urlpath.pathname; // Gets the path without the query string (?)
+  const urlpath = url.parse(req.url, true);
+  const route = urlpath.pathname;
 
-    console.log("Method requested: " + req.method + ", with endpoint " + pathname);
+  console.log(`Method: ${req.method} | Path: ${route}`);
 
-    if (req.method === "GET") {
-        if (pathname === "/" || pathname === "/home") {
-            // Both root and /home now point to index.html
-            renderFile(res, "index.html");
-        } else if (pathname === "/test") {
-            res.writeHead(200, { "Content-Type": "text/plain" });
-            res.end("hello");
-        } else if (pathname === "/games/list") {
-            renderFile(res, "games/list.html");
-        } else if (pathname === "/games/start") {
-            renderFile(res, "games/start.html");
-        } else if (pathname === "/mobile-app-upgrades") {
-            renderFile(res, "other/mobile-app-upgrades.html");
-        } else if (pathname === "/status") {
-            res.writeHead(200, { "Content-Type": "text/plain" });
-            res.end("i am... good and healthy :D");
-        } else {
-            // Try to serve assets (CSS/Images) or return 404
-            serveStaticAsset(res, pathname);
-        }
-    }
+  if (route === "/" || route === "/index.html") {
+    // Read and serve your index.html file
+    fs.readFile(path.join(__dirname, "index.html"), (err, data) => {
+      if (err) {
+        res.writeHead(500);
+        return res.end("Error loading index.html");
+      }
+      res.writeHead(200, { "Content-Type": "text/html" });
+      res.end(data);
+    });
+  } 
+  else if (route === "/test") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("hello");
+  } 
+  else if (route.startsWith("/assets/")) {
+    // Simple logic to serve files from your assets folder
+    const filePath = path.join(__dirname, route);
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.writeHead(404);
+        res.end("Asset not found");
+      } else {
+        res.end(data);
+      }
+    });
+  }
+  else {
+    res.writeHead(404);
+    res.end("404 Not Found");
+  }
 }).listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server live at http://localhost:${port}`);
 });
-
-// Helper to load HTML files
-function renderFile(res, fileName) {
-    const filePath = path.join(__dirname, fileName);
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-            res.writeHead(404, { "Content-Type": "text/plain" });
-            res.end("404: HTML File Not Found");
-            return;
-        }
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.end(data);
-    });
-}
-
-// Helper to load CSS, JS, and Images
-function serveStaticAsset(res, pathname) {
-    const filePath = path.join(__dirname, pathname);
-    const ext = path.extname(filePath);
-    
-    const mimeTypes = {
-        '.css': 'text/css',
-        '.png': 'image/png',
-        '.jpg': 'image/jpeg',
-        '.js': 'application/javascript'
-    };
-
-    fs.readFile(filePath, (err, data) => {
-        if (err) {
-            res.writeHead(404);
-            res.end("Resource not found");
-            return;
-        }
-        res.writeHead(200, { "Content-Type": mimeTypes[ext] || "application/octet-stream" });
-        res.end(data);
-    });
-}
